@@ -28,22 +28,37 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function(x = 202, y = 405){
+var Player = function(column = 2, row = 5){
     this.sprite = 'images/char-boy.png';
-    this.x = x;
-    this.y = y;
+
+    this.column = column;
+    this.row = row;
+
+    this.x = column * 101;
+    this.y = (row * 83) - 10;
 };
 
 Player.prototype.update = function(dt){
-
+    this.x = this.column * 101;
+    this.y = (this.row * 83) - 10;
 }
 
 Player.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-Player.prototype.handleInput = function(){
-    console.log("Handle Input");
+Player.prototype.handleInput = function(action){
+    console.log(action);
+    if(action === 'up' && this.row > 0){
+        this.row--;
+    } else if(action === 'down' && this.row < 5){
+        this.row++;
+    } else if(action ==='left' && this.column > 0){
+        this.column--;
+    } else if(action === 'right' && this.column < 4){
+        this.column++;
+    }
+    console.log('x=' + this.x + ' y=' + this.y);
 }
 
 // Now instantiate your objects.
@@ -56,18 +71,22 @@ for (let i = 0; i < numEnemies; i++){
     allEnemies.push(enemy);
 }
 
-const player = new Player(202,405);
+const player = new Player(2,5);
 
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
+    const allowedKeys = new Map();
+    allowedKeys.set(37, 'left');
+    allowedKeys.set(38, 'up');
+    allowedKeys.set(39, 'right');
+    allowedKeys.set(40, 'down');
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    if(allowedKeys.has(e.keyCode)){
+        const keyValue = allowedKeys.get(e.keyCode);
+        e.preventDefault();
+        player.handleInput(keyValue);
+    }
+
 });
