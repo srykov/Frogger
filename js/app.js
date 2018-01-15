@@ -70,13 +70,13 @@ const allEnemies = [];
 const enemy1 = new Enemy(0,1,1);
 allEnemies.push(enemy1);
 
-const enemy2 = new Enemy(0,1,2);
+const enemy2 = new Enemy(-4,1,2);
 allEnemies.push(enemy2);
 
-const enemy3 = new Enemy(0,3,1);
+const enemy3 = new Enemy(-1,2,1);
 allEnemies.push(enemy3);
 
-const enemy4 = new Enemy(0,2,2);
+const enemy4 = new Enemy(-2,3,2);
 allEnemies.push(enemy4);
 
 const player = new Player(2,5);
