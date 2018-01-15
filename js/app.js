@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function(x = 0, y = 0, speed) {
+var Enemy = function(startColumn = 0, startRow = 0, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -7,8 +7,8 @@ var Enemy = function(x = 0, y = 0, speed) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 
-    this.x = x;
-    this.y = y;
+    this.x = startColumn * 101;
+    this.y = (startRow * 83) - 10;
     this.speed = speed;
 };
 
@@ -18,6 +18,8 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x = this.x + this.speed;
+
 };
 
 // Draw the enemy on the screen, required method for game
@@ -33,18 +35,16 @@ var Player = function(column = 2, row = 5){
 
     this.column = column;
     this.row = row;
-
-    this.x = column * 101;
-    this.y = (row * 83) - 10;
 };
 
 Player.prototype.update = function(dt){
-    this.x = this.column * 101;
-    this.y = (this.row * 83) - 10;
+
 }
 
 Player.prototype.render = function(){
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    const xPosition = this.column * 101;
+    const yPosition = (this.row * 83) - 10;
+    ctx.drawImage(Resources.get(this.sprite), xPosition, yPosition);
 }
 
 Player.prototype.handleInput = function(action){
@@ -58,18 +58,26 @@ Player.prototype.handleInput = function(action){
     } else if(action === 'right' && this.column < 4){
         this.column++;
     }
-    console.log('x=' + this.x + ' y=' + this.y);
+    console.log('column=' + this.column + ' row=' + this.row);
 }
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-const numEnemies = 5;
+
 const allEnemies = [];
-for (let i = 0; i < numEnemies; i++){
-    const enemy = new Enemy();
-    allEnemies.push(enemy);
-}
+
+const enemy1 = new Enemy(0,1,1);
+allEnemies.push(enemy1);
+
+const enemy2 = new Enemy(0,1,2);
+allEnemies.push(enemy2);
+
+const enemy3 = new Enemy(0,3,1);
+allEnemies.push(enemy3);
+
+const enemy4 = new Enemy(0,2,2);
+allEnemies.push(enemy4);
 
 const player = new Player(2,5);
 
