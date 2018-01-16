@@ -1,3 +1,87 @@
 body {
     text-align: center;
+    font-family: 'Roboto', sans-serif;
 }
+
+h1,
+h2 {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+    color: #ff6a00;
+    margin: 0;
+}
+
+h1 {
+    font-size: 40px;
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 30px;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 20px;
+    text-align: center;
+    width: 80%;
+}
+
+.modal .characters{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal .character{
+    cursor: pointer;
+    display: flex;
+}
+
+/* The Close Button */
+.close {
+    color: #a9a9a9;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #ff6a00;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*tablet*/
+@media screen and (min-width:413px) and (max-width:769px) {
+    .modal-content {
+        width: 60%;
+    }
+}
+
+/*desktop*/
+@media screen and (min-width:769px) {
+    .modal-content {
+        width: 30%;
+    }

@@ -18,7 +18,11 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.x = this.x + this.speed;
+    if(this.x >= 500){
+        this.x = 0;
+    } else{
+        this.x = this.x + this.speed;
+    }
 
 };
 
@@ -31,20 +35,28 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(column = 2, row = 5){
-    this.sprite = 'images/char-boy.png';
+    this.sprite = 'images/char-princess-girl.png';
 
     this.column = column;
     this.row = row;
 };
 
 Player.prototype.update = function(dt){
-
+    if(this.row === 0){
+        this.reset();
+    }
 }
 
 Player.prototype.render = function(){
     const xPosition = this.column * 101;
     const yPosition = (this.row * 83) - 10;
     ctx.drawImage(Resources.get(this.sprite), xPosition, yPosition);
+}
+
+Player.prototype.reset = function(){
+    this.column = 2;
+    this.row = 5;
+    this.render();
 }
 
 Player.prototype.handleInput = function(action){
@@ -67,17 +79,20 @@ Player.prototype.handleInput = function(action){
 
 const allEnemies = [];
 
-const enemy1 = new Enemy(0,1,1);
+const enemy1 = new Enemy(0,3,1);
 allEnemies.push(enemy1);
 
 const enemy2 = new Enemy(-4,1,2);
 allEnemies.push(enemy2);
 
-const enemy3 = new Enemy(-1,2,1);
+const enemy3 = new Enemy(-3,2,4);
 allEnemies.push(enemy3);
 
 const enemy4 = new Enemy(-2,3,2);
 allEnemies.push(enemy4);
+
+const enemy5 = new Enemy(-7,1,2);
+allEnemies.push(enemy5);
 
 const player = new Player(2,5);
 
@@ -98,3 +113,13 @@ document.addEventListener('keyup', function(e) {
     }
 
 });
+
+
+/*
+ * Close the modal and re-initialize the game.
+ */
+function closeModal(){
+    const modal = document.getElementById('modal');
+    modal.style.display = 'none';
+}
+
