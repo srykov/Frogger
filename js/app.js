@@ -6,10 +6,32 @@ var Enemy = function(startColumn = 0, startRow = 0, speed) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.speed = speed;
 
     this.x = startColumn * 101;
     this.y = (startRow * 83) - 10;
-    this.speed = speed;
+
+    //Returns a set of the columns that the enenmy is currently
+    //occupying
+    this.columns = function(){
+
+        const columns = new Set();
+
+        const widthOfColumn = 101;
+        const widthOfEnemy = 101
+
+        //add column for left side of enemy
+        columns.add(Math.floor(this.x/widthOfColumn));
+        //add column for right side of enemy
+        columns.add(Math.floor((this.x + widthOfEnemy)/widthOfColumn);
+
+        return columns;
+    }
+
+    this.row = function(){
+        return Math.floor((this.y + 10)/83);
+    }
+
 };
 
 // Update the enemy's position, required method for game
@@ -20,11 +42,24 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     if(this.x >= 500){
         this.x = 0;
+    } else if(this.checkCollision(player)) {
+        console.log("Collided!");
+        player.loseAPoint();
+        player.resetPosition();
     } else{
         this.x = this.x + this.speed;
     }
-
 };
+
+Enemy.prototype.checkCollision = function(){
+
+    const columns = this.columns();
+    if(this.row() === player.row && columns.has(player.column)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -39,11 +74,24 @@ var Player = function(column = 2, row = 5){
 
     this.column = column;
     this.row = row;
+    this.points = 0;
 };
+
+Player.prototype.loseAPoint = function(){
+    if(this.points > 0){
+        this.points--;
+        const pointsSpan = document.querySelector('.points');
+        pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
+    }
+
+}
 
 Player.prototype.update = function(dt){
     if(this.row === 0){
-        this.reset();
+        this.points++;
+        const pointsSpan = document.querySelector('.points');
+        pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
+        this.resetPosition();
     }
 }
 
@@ -53,14 +101,13 @@ Player.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite), xPosition, yPosition);
 }
 
-Player.prototype.reset = function(){
+Player.prototype.resetPosition = function(){
     this.column = 2;
     this.row = 5;
     this.render();
 }
 
 Player.prototype.handleInput = function(action){
-    console.log(action);
     if(action === 'up' && this.row > 0){
         this.row--;
     } else if(action === 'down' && this.row < 5){
@@ -70,7 +117,6 @@ Player.prototype.handleInput = function(action){
     } else if(action === 'right' && this.column < 4){
         this.column++;
     }
-    console.log('column=' + this.column + ' row=' + this.row);
 }
 
 // Now instantiate your objects.
@@ -79,20 +125,20 @@ Player.prototype.handleInput = function(action){
 
 const allEnemies = [];
 
-const enemy1 = new Enemy(0,3,1);
+const enemy1 = new Enemy(0,1,1);
 allEnemies.push(enemy1);
 
-const enemy2 = new Enemy(-4,1,2);
+/*const enemy2 = new Enemy(-4,1,2);
 allEnemies.push(enemy2);
 
-const enemy3 = new Enemy(-3,2,4);
+const enemy3 = new Enemy(-1,2,4);
 allEnemies.push(enemy3);
 
-const enemy4 = new Enemy(-2,3,2);
+const enemy4 = new Enemy(-3,2,2);
 allEnemies.push(enemy4);
 
-const enemy5 = new Enemy(-7,1,2);
-allEnemies.push(enemy5);
+const enemy5 = new Enemy(0,3,2);
+allEnemies.push(enemy5);*/
 
 const player = new Player(2,5);
 
@@ -100,6 +146,7 @@ const player = new Player(2,5);
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
+
     const allowedKeys = new Map();
     allowedKeys.set(37, 'left');
     allowedKeys.set(38, 'up');
@@ -107,19 +154,13 @@ document.addEventListener('keyup', function(e) {
     allowedKeys.set(40, 'down');
 
     if(allowedKeys.has(e.keyCode)){
+
+        const scorePanel = document.querySelector('.score-panel');
+        scorePanel.style.display = 'block';
+
         const keyValue = allowedKeys.get(e.keyCode);
         e.preventDefault();
         player.handleInput(keyValue);
     }
 
 });
-
-
-/*
- * Close the modal and re-initialize the game.
- */
-function closeModal(){
-    const modal = document.getElementById('modal');
-    modal.style.display = 'none';
-}
-

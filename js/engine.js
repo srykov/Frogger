@@ -90,8 +90,9 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
+
+        allEnemies.forEach(function(enemy, player) {
+            enemy.update(dt, player);
         });
         player.update();
     }
@@ -174,7 +175,8 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
-        'images/char-princess-girl.png'
+        'images/char-princess-girl.png',
+        'images/char-cat-girl.png'
     ]);
     Resources.onReady(init);
 
