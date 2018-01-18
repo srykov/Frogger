@@ -1,10 +1,8 @@
-// Enemies our player must avoid
+/*******************************************
+ * Enemy Class: represents the enemies that
+ * our player must avoid!
+ ******************************************/
 var Enemy = function(startColumn = 0, startRow = 0, speed) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.speed = speed;
 
@@ -13,7 +11,7 @@ var Enemy = function(startColumn = 0, startRow = 0, speed) {
 };
 
 //Returns a set containing the columns that this enemy is currently
-//occupying
+//occupying (may be one or two columns)
 Enemy.prototype.columns = function(){
 
     const columns = new Set();
@@ -29,27 +27,31 @@ Enemy.prototype.columns = function(){
     return columns;
 }
 
-//Returns the row that the enemy is currently occupying
+//Returns the row that this enemy is currently occupying
+//(should only ever be one row)
 Enemy.prototype.row = function(){
     return Math.floor((this.y + 10)/83);
 }
 
-// Update the enemy's position, required method for game
+// Update the enemy's position
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    //this enemy is off the screen, send him back to the start
     if(this.x >= 500){
-        this.x = 0;
-    } else if(this.checkCollision(player)) {
+        this.x = -5;
+    } //player collided with this enemy
+    else if(this.checkCollision(player)) {
         player.loseAPoint();
         player.resetPosition();
-    } else{
+    } //otherwise just keep the enemy moving along
+    else{
+        // multiply any movement by the dt parameter which will
+        // ensure the game runs at the same speed for all computers
         this.x = this.x + (this.speed*dt);
     }
 };
 
+//check whether this enenmy is occupying the same row/column as the player
 Enemy.prototype.checkCollision = function(){
 
     const columns = this.columns();
@@ -65,9 +67,10 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+/*******************************************
+ * Player Class
+ * Represents the Hero of Our Game!
+ ******************************************/
 var Player = function(column = 2, row = 5){
     this.sprite = 'images/char-princess-girl.png';
 
@@ -76,16 +79,21 @@ var Player = function(column = 2, row = 5){
     this.points = 0;
 };
 
+//make the player lose a point
 Player.prototype.loseAPoint = function(){
     if(this.points > 0){
         this.points--;
+        //update score panel
         const pointsSpan = document.querySelector('.points');
         pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
     }
 
 }
 
+//update the player's position
 Player.prototype.update = function(dt){
+    //if the player reaches the water, give them a point and move them back
+    //to the starting position
     if(this.row === 0){
         this.points++;
         const pointsSpan = document.querySelector('.points');
@@ -94,18 +102,24 @@ Player.prototype.update = function(dt){
     }
 }
 
+//translate the player's column/row into x/y coordinates
+//and use that to render the player in the correct position
+//on the canvas
 Player.prototype.render = function(){
     const xPosition = this.column * 101;
     const yPosition = (this.row * 83) - 10;
     ctx.drawImage(Resources.get(this.sprite), xPosition, yPosition);
 }
 
+//move the player back to the start position
 Player.prototype.resetPosition = function(){
     this.column = 2;
     this.row = 5;
+    this.update();
     this.render();
 }
 
+//have the player move according to user input
 Player.prototype.handleInput = function(action){
     if(action === 'up' && this.row > 0){
         this.row--;
@@ -118,27 +132,23 @@ Player.prototype.handleInput = function(action){
     }
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
 
+// Place all enemy objects in an array called allEnemies
 const allEnemies = [];
 
 const enemy1 = new Enemy(0,1,40);
 allEnemies.push(enemy1);
-
 const enemy2 = new Enemy(-6,1,50);
 allEnemies.push(enemy2);
-
 const enemy3 = new Enemy(-1,2,100);
 allEnemies.push(enemy3);
-
 const enemy4 = new Enemy(-6,2,30);
-//allEnemies.push(enemy4);
+allEnemies.push(enemy4);
 
 const enemy5 = new Enemy(0,3,60);
 allEnemies.push(enemy5);
 
+// Place the player object in a variable called player
 const player = new Player(2,5);
 
 
