@@ -95,6 +95,10 @@ h2 {
     width: 80%;
 }
 
+.modal .instructions{
+	text-align: left;
+}
+
 .modal .characters{
     display: flex;
     flex-wrap: wrap;
