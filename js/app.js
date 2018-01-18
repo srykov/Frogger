@@ -79,6 +79,20 @@ var Player = function(column = 2, row = 5){
     this.points = 0;
 };
 
+Player.prototype.updateCharacter = function(characterName){
+    switch(characterName){
+        case 'jimmy':
+            this.sprite =  'images/char-boy.png';
+        break;
+        case 'jane':
+            this.sprite =  'images/char-princess-girl.png';
+        break;
+        case 'sabrina':
+            this.sprite =  'images/char-cat-girl.png';
+        break;
+    }
+}
+
 //make the player lose a point
 Player.prototype.loseAPoint = function(){
     if(this.points > 0){
@@ -150,6 +164,24 @@ allEnemies.push(enemy5);
 
 // Place the player object in a variable called player
 const player = new Player(2,5);
+
+
+
+const modalDiv = document.querySelector('.modal');
+modalDiv.addEventListener('click', function(e) {
+    console.log(e.target);
+    const clickTarget = e.target;
+    if(clickTarget.nodeName === 'IMG'){
+        const characterDiv = clickTarget.parentElement;
+        const charName = characterDiv.attributes.getNamedItem("data-key").value;
+        console.log(charName);
+        player.updateCharacter(charName);
+        modal.style.display = 'none';
+    }
+
+});
+
+
 
 
 // This listens for key presses and sends the keys to your
