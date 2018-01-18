@@ -10,29 +10,29 @@ var Enemy = function(startColumn = 0, startRow = 0, speed) {
 
     this.x = startColumn * 101;
     this.y = (startRow * 83) - 10;
-
-    //Returns a set of the columns that the enenmy is currently
-    //occupying
-    this.columns = function(){
-
-        const columns = new Set();
-
-        const widthOfColumn = 101;
-        const widthOfEnemy = 101
-
-        //add column for left side of enemy
-        columns.add(Math.floor(this.x/widthOfColumn));
-        //add column for right side of enemy
-        columns.add(Math.floor((this.x + widthOfEnemy)/widthOfColumn);
-
-        return columns;
-    }
-
-    this.row = function(){
-        return Math.floor((this.y + 10)/83);
-    }
-
 };
+
+//Returns a set containing the columns that this enemy is currently
+//occupying
+Enemy.prototype.columns = function(){
+
+    const columns = new Set();
+
+    const widthOfColumn = 101;
+    const widthOfEnemy = 101
+
+    //add column for left side of enemy
+    columns.add(Math.floor(this.x/widthOfColumn));
+    //add column for right side of enemy
+    columns.add(Math.floor((this.x + widthOfEnemy)/widthOfColumn));
+
+    return columns;
+}
+
+//Returns the row that the enemy is currently occupying
+Enemy.prototype.row = function(){
+    return Math.floor((this.y + 10)/83);
+}
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -43,11 +43,10 @@ Enemy.prototype.update = function(dt) {
     if(this.x >= 500){
         this.x = 0;
     } else if(this.checkCollision(player)) {
-        console.log("Collided!");
         player.loseAPoint();
         player.resetPosition();
     } else{
-        this.x = this.x + this.speed;
+        this.x = this.x + (this.speed*dt);
     }
 };
 
@@ -125,20 +124,20 @@ Player.prototype.handleInput = function(action){
 
 const allEnemies = [];
 
-const enemy1 = new Enemy(0,1,1);
+const enemy1 = new Enemy(0,1,40);
 allEnemies.push(enemy1);
 
-/*const enemy2 = new Enemy(-4,1,2);
+const enemy2 = new Enemy(-6,1,50);
 allEnemies.push(enemy2);
 
-const enemy3 = new Enemy(-1,2,4);
+const enemy3 = new Enemy(-1,2,100);
 allEnemies.push(enemy3);
 
-const enemy4 = new Enemy(-3,2,2);
-allEnemies.push(enemy4);
+const enemy4 = new Enemy(-6,2,30);
+//allEnemies.push(enemy4);
 
-const enemy5 = new Enemy(0,3,2);
-allEnemies.push(enemy5);*/
+const enemy5 = new Enemy(0,3,60);
+allEnemies.push(enemy5);
 
 const player = new Player(2,5);
 
