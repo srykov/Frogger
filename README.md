@@ -1,4 +1,4 @@
-# Arcade Game Project
+# Frogger - Arcade Game Project
 This was a project that I developed as part of my Udacity [Front-End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001). The project required me to build my own version of the classic arcade game 'Frogger', using Object Oriented Javascript. Udacity provided some initial javascript for rendering the game canvas. I wrote the javascript to bring the game's functionality to life, as well as customizing the HTML and CSS.
 
 ![Frogger](https://github.com/srykov/fend-arcade-game/blob/master/images/char-cat-girl.png)
