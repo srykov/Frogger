@@ -2,31 +2,14 @@
  * Enemy Class: represents the enemies that
  * our player must avoid!
  ******************************************/
-var Enemy = function(startColumn = 0, startRow = 0, speed, game) {
-    this.sprite = 'images/enemy-bug.png';
-    this.speed = speed;
-    this.startColumn = startColumn;
-    this.startRow = startRow;
+var Enemy = function(startRow = 0, game) {
+    startColumn = getRandomInt(1,3);//between 1 & 3 (stone rows)
+    startRow = startRow;
     this.x = startColumn * 101;
     this.y = (startRow * 83) - 10;
+    this.sprite = 'images/enemy-bug.png';
+    this.speed = getRandomInt(4, 7);
     this.game = game;
-};
-
-//Returns a set containing the columns that this enemy is currently
-//occupying (may be one or two columns)
-Enemy.prototype.columns = function(){
-
-    const columns = new Set();
-
-    const widthOfColumn = 101;
-    const widthOfEnemy = 101
-
-    //add column for left side of enemy
-    columns.add(Math.floor(this.x/widthOfColumn));
-    //add column for right side of enemy
-    columns.add(Math.floor((this.x + widthOfEnemy)/widthOfColumn));
-
-    return columns;
 };
 
 //Returns the row that this enemy is currently occupying
@@ -42,7 +25,7 @@ Enemy.prototype.update = function(dt) {
     if(this.x >= 500){
         this.x = -5;
     } //player collided with this enemy - reset the game
-    else if(this.game.checkCollision(this)) {
+    else if(this.game.checkCollision(this)){
         this.game.reset();
     } //otherwise just keep the enemy moving along
     else{
@@ -50,14 +33,6 @@ Enemy.prototype.update = function(dt) {
         // ensure the game runs at the same speed for all computers
         this.x = this.x + (this.speed*dt);
     }
-};
-
-
-//move the enemy back to its starting position
-Enemy.prototype.resetPosition = function(){
-    this.column = this.startColumn;
-    this.row = this.startRow;
-    this.render();
 };
 
 // Draw the enemy on the screen, required method for game
@@ -85,16 +60,20 @@ var Treasure = function(type = 'heart'){
     this.row = getRandomInt(1,6); //between 1 & 5
     this.points = 1;
     this.awarded = false;
+    this.xPosition = function(){
+        return this.column * 101;
+    }
+    this.yPosition = function(){
+        return (this.row * 83) - 10;
+    }
 };
 
 
 Treasure.prototype.render =  function(){
     if(this.awarded === false){
-        const xPosition = this.column * 101;
-        const yPosition = (this.row * 83) - 10;
-        ctx.drawImage(Resources.get(this.sprite), xPosition, yPosition);
+        ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
     }
-}
+};
 
 /*******************************************
  * Player Class
@@ -107,11 +86,18 @@ var Player = function(game){
     this.startRow = getRandomInt(4,6); //between 4 & 5 (the grass rows)
     this.column = this.startColumn;
     this.row = this.startRow;
+    this.xPosition = function(){
+        return this.column * 101;
+    };
+    this.yPosition = function(){
+        return (this.row * 83) - 10;
+    };
     this.points = 0;
     this.game = game;
 };
 
-Player.prototype.updateCharacter = function(characterName){
+//update the Player's sprite, after the user chooses a character
+Player.prototype.updateSprite = function(characterName){
     switch(characterName){
         case 'jimmy':
             this.sprite =  'images/char-boy.png';
@@ -123,18 +109,7 @@ Player.prototype.updateCharacter = function(characterName){
             this.sprite =  'images/char-cat-girl.png';
         break;
     }
-}
-
-//make the player lose a point
-Player.prototype.loseAPoint = function(){
-    if(this.points > 0){
-        this.points--;
-        //update score panel
-        const pointsSpan = document.querySelector('.points');
-        pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
-    }
-
-}
+};
 
 //check if the player's new position earns any points
 Player.prototype.update = function(dt){
@@ -160,27 +135,13 @@ Player.prototype.update = function(dt){
 
     const pointsSpan = document.querySelector('.points');
     pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
-}
+};
 
-
-
-//translate the player's column/row into x/y coordinates
-//and use that to render the player in the correct position
-//on the canvas
+//user the player's  x/y coordinates to render the
+// player in the correct position on the canvas
 Player.prototype.render = function(){
-    const xPosition = this.column * 101;
-    const yPosition = (this.row * 83) - 10;
-    ctx.drawImage(Resources.get(this.sprite), xPosition, yPosition);
-}
-
-//move the player back to the start position
-Player.prototype.reset = function(){
-    this.resetPosition();
-    this.points = 0;
-    this.update();
-    this.render();
-}
-
+    ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
+};
 
 //move the player back to the start position
 Player.prototype.resetPosition = function(){
@@ -188,20 +149,25 @@ Player.prototype.resetPosition = function(){
     this.row = this.startRow;
     this.update();
     this.render();
-}
+};
 
 //have the player move according to user input
 Player.prototype.handleInput = function(action){
-    if(action === 'up' && this.row > 0){
+
+    const topRow = 0;
+    const bottomRow = 5;
+    const firstColumn = 0;
+    const lastColumn = 4;
+    if(action === 'up' && this.row > topRow){
         this.row--;
-    } else if(action === 'down' && this.row < 5){
+    } else if(action === 'down' && this.row < bottomRow){
         this.row++;
-    } else if(action ==='left' && this.column > 0){
+    } else if(action ==='left' && this.column > firstColumn){
         this.column--;
-    } else if(action === 'right' && this.column < 4){
+    } else if(action === 'right' && this.column < lastColumn){
         this.column++;
     }
-}
+};
 
 
 /*******************************************
@@ -224,26 +190,28 @@ Game.prototype.reset = function(){
     this.initializeTreasures();
     this.player = new Player(this);
 
-}
+};
 
-//check whether this enenmy is occupying the same row/column as the player
+//check whether the given enemy is occupying the same row/column as the player
 Game.prototype.checkCollision = function(enemy){
-
-    const columns = enemy.columns();
-    if(enemy.row() === this.player.row && columns.has(this.player.column)) {
+    const widthOfEnemies = 85;
+    debugger;
+    if( (enemy.row() === this.player.row) &&
+            (enemy.x < this.player.xPosition() + widthOfEnemies) &&
+            (enemy.x + widthOfEnemies > this.player.xPosition())){
         return true;
     } else {
         return false;
     }
-}
+};
 
 //create new enemies
 Game.prototype.initializeEnemies = function(){
-    const enemy1 = new Enemy(0,1,40,this);//row 1
+    const enemy1 = new Enemy(1,this);//row 1
     this.allEnemies.push(enemy1);
-    const enemy2 = new Enemy(-1,2,70,this); //row 2
+    const enemy2 = new Enemy(2,this); //row 2
     this.allEnemies.push(enemy2);
-    const enemy3 = new Enemy(0,3,60,this); //row3
+    const enemy3 = new Enemy(3,this); //row3
     this.allEnemies.push(enemy3);
 };
 
@@ -273,7 +241,7 @@ initModalDiv.addEventListener('click', function(e) {
     if(clickTarget.nodeName === 'IMG'){
         const characterDiv = clickTarget.parentElement;
         const charName = characterDiv.attributes.getNamedItem("data-key").value;
-        theGame.player.updateCharacter(charName);
+        theGame.player.updateSprite(charName);
         initModalDiv.style.display = 'none';
     }
 
