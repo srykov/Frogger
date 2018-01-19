@@ -1,6 +1,6 @@
 /*******************************************
- * Enemy Class: represents the enemies that
- * our player must avoid!
+ * Enemy Class: The enemies that  our player
+ * must avoid!
  ******************************************/
 class Enemy{
     constructor(startRow = 0, game) {
@@ -39,7 +39,7 @@ class Enemy{
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
-}
+} //end Enemy definition
 
 
 /*******************************************
@@ -76,7 +76,7 @@ class Treasure{
             ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
         }
     }
-}
+} //end Treasure definition
 
 
 /*******************************************
@@ -171,62 +171,65 @@ class Player{
             this.column++;
         }
     }
-}
+} //end Player Definition
 
 
 /*******************************************
- * Game Class: represents the game
+ * Game Class: represents the game itself
  ******************************************/
-var Game = function(){
-    this.allEnemies = [];
-    this.allTreasures = [];
-    this.initializeEnemies();
-    this.initializeTreasures();
-    this.player = new Player(this);
-};
-
-//reset the various parts of the game
-Game.prototype.reset = function(){
-    this.allEnemies = [];
-    this.allTreasures = [];
-
-    this.initializeEnemies();
-    this.initializeTreasures();
-    this.player = new Player(this);
-
-};
-
-//check whether the given enemy is occupying the same row/column as the player
-Game.prototype.checkCollision = function(enemy){
-    const widthOfEnemies = 85;
-    if( (enemy.row() === this.player.row) &&
-            (enemy.x < this.player.xPosition() + widthOfEnemies) &&
-            (enemy.x + widthOfEnemies > this.player.xPosition())){
-        return true;
-    } else {
-        return false;
+class Game {
+    constructor(){
+        this.allEnemies = [];
+        this.allTreasures = [];
+        this.initializeEnemies();
+        this.initializeTreasures();
+        this.player = new Player(this);
     }
-};
 
-//create new enemies
-Game.prototype.initializeEnemies = function(){
-    const enemy1 = new Enemy(1,this);//row 1
-    this.allEnemies.push(enemy1);
-    const enemy2 = new Enemy(2,this); //row 2
-    this.allEnemies.push(enemy2);
-    const enemy3 = new Enemy(3,this); //row3
-    this.allEnemies.push(enemy3);
-};
+    //reset the various parts of the game
+    reset(){
+        this.allEnemies = [];
+        this.allTreasures = [];
 
-//create new treasures
-Game.prototype.initializeTreasures = function(){
-    const heart = new Treasure('heart');
-    this.allTreasures.push(heart);
-    const star = new Treasure('star');
-    this.allTreasures.push(star);
-    const key = new Treasure('key');
-    this.allTreasures.push(key);
-};
+        this.initializeEnemies();
+        this.initializeTreasures();
+        this.player = new Player(this);
+
+    }
+
+    //check whether the given enemy is occupying the same row/column as the player
+    checkCollision(enemy){
+        const widthOfEnemies = 85;
+        if( (enemy.row() === this.player.row) &&
+                (enemy.x < this.player.xPosition() + widthOfEnemies) &&
+                (enemy.x + widthOfEnemies > this.player.xPosition())){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //create new enemies
+    initializeEnemies(){
+        const enemy1 = new Enemy(1,this);//row 1
+        this.allEnemies.push(enemy1);
+        const enemy2 = new Enemy(2,this); //row 2
+        this.allEnemies.push(enemy2);
+        const enemy3 = new Enemy(3,this); //row3
+        this.allEnemies.push(enemy3);
+    }
+
+    //create new treasures
+    initializeTreasures(){
+        const heart = new Treasure('heart');
+        this.allTreasures.push(heart);
+        const star = new Treasure('star');
+        this.allTreasures.push(star);
+        const key = new Treasure('key');
+        this.allTreasures.push(key);
+    }
+} //end Game definition
+
 
 const theGame = new Game();
 
