@@ -79,7 +79,7 @@ class Enemy extends Entity{
     // Update the enemy's position
     // Parameter: dt, a time delta between ticks
     update(dt) {
-        //this enemy is off the screen, send him back to the start
+        //this enemy has made it all the way across the screen, send him back to the start
         if(this.x >= 500){
             this.x = -5;
         } //player collided with this enemy - reset the game
@@ -228,7 +228,6 @@ class Game {
         if( (enemy.row() === this.player.row) &&
                 (enemy.x + widthOfEnemies > this.player.xPosition() + 15) &&
                 (enemy.x < widthOfPlayers - 15 + this.player.xPosition()) ){
-            console.log('Enemy X: ' + enemy.x + ', Player X: ' + this.player.xPosition());
             return true;
         } else {
             return false;
