@@ -70,9 +70,16 @@ h2 {
     margin: 0 0 0 30px;
 }
 
+#init-modal{
+	display: block;
+}
+
+#winner-modal{
+	display: none;
+}
+
 /* The Modal (background) */
 .modal {
-    display: block;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -83,6 +90,7 @@ h2 {
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4);
 }
+
 
 /* Modal Content/Box */
 .modal-content {

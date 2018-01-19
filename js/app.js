@@ -93,9 +93,9 @@ var Treasure = function(type = 'heart'){
     }
 
 
-    this.column = getRandomInt(0,5);
-    this.row = getRandomInt(1,6);
-    this.points = getRandomInt(1,3);
+    this.column = getRandomInt(0,5);//between 0 & 4
+    this.row = getRandomInt(1,6); //between 1 & 5
+    this.points = 1;
     this.awarded = false;
 };
 
@@ -146,6 +146,12 @@ Player.prototype.loseAPoint = function(){
 
 //check if the player's new position earns any points
 Player.prototype.update = function(dt){
+
+    if(this.points >= 5){
+        const modalDiv = document.getElementById('winner-modal');
+        modalDiv.style.display = 'block';
+    }
+
     for(treasure of allTreasures){
         if(this.row === treasure.row && this.column === treasure.column && treasure.awarded === false){
             this.points = this.points + treasure.points;
@@ -164,6 +170,8 @@ Player.prototype.update = function(dt){
     pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
 }
 
+
+
 //translate the player's column/row into x/y coordinates
 //and use that to render the player in the correct position
 //on the canvas
@@ -172,6 +180,15 @@ Player.prototype.render = function(){
     const yPosition = (this.row * 83) - 10;
     ctx.drawImage(Resources.get(this.sprite), xPosition, yPosition);
 }
+
+//move the player back to the start position
+Player.prototype.reset = function(){
+    this.resetPosition();
+    this.points = 0;
+    this.update();
+    this.render();
+}
+
 
 //move the player back to the start position
 Player.prototype.resetPosition = function(){
@@ -227,25 +244,32 @@ function getRandomInt(min, max) {
 }
 
 
-const modalDiv = document.querySelector('.modal');
-modalDiv.addEventListener('click', function(e) {
-    console.log(e.target);
+const initModalDiv = document.getElementById('init-modal');
+initModalDiv.addEventListener('click', function(e) {
     const clickTarget = e.target;
     if(clickTarget.nodeName === 'IMG'){
         const characterDiv = clickTarget.parentElement;
         const charName = characterDiv.attributes.getNamedItem("data-key").value;
         console.log(charName);
         player.updateCharacter(charName);
-        modal.style.display = 'none';
+        initModalDiv.style.display = 'none';
     }
 
     if(clickTarget.nodeName === 'SPAN' && clickTarget.classList.contains('close')){
-        modal.style.display = 'none';
+        initModalDiv.style.display = 'none';
     }
 
 });
 
+const winnerModalDiv = document.getElementById('winner-modal');
+winnerModalDiv.addEventListener('click', function(e) {
+    player.reset();
+    const clickTarget = e.target;
+    if(clickTarget.nodeName === 'SPAN' && clickTarget.classList.contains('close')){
+        winnerModalDiv.style.display = 'none';
+    }
 
+});
 
 
 // This listens for key presses and sends the keys to your

@@ -10,18 +10,26 @@
 </head>
 <body>
     <!-- Game Initialization Modal -->
-	<div id="modal" class="modal">
+	<div id="init-modal" class="modal">
       <div class="modal-content">
         <span class="close">&times;</span>
-        <h1>Frogger</h1>
+        <h1>Welcome to Frogger</h1>
         <p class="instructions">The object of the game is to reach the water, without touching any bugs!  You can move your character by pressing the up, down, left and right arrow keys. </span>
-        <p class="instructions">You get one point for reaching the water and lose one point for touching a bug! Bonus points for collecting the treasures as you go!</span>
+        <p class="instructions">You get one point for reaching the water and lose one point for touching a bug! There are bonus points for collecting the treasures as you go. You win the game when you have collected 5 points.</span>
     	<p class="instructions">Please select your character to get started!</span>
         <div class="characters">
         	<div data-key="jimmy" class="character"><img src="images/char-boy.png"/></div>
         	<div data-key="jane" class="character"><img src="images/char-princess-girl.png"/></div>
         	<div data-key="sabrina" class="character"><img src="images/char-cat-girl.png"/></div>
         </div>
+      </div>
+    </div>
+    <!-- Winner  Modal -->
+	<div id="winner-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h1>Congratulations!</h1>
+        <p class="instructions">You collected 5 points! You win.</span>
       </div>
     </div>
     <div class="container">
