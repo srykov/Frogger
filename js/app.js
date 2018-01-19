@@ -47,36 +47,40 @@ class Enemy{
  * Treasure Class
  * Represents the hidden treasures!
  ******************************************/
-var Treasure = function(type = 'heart'){
-    switch(type.toLowerCase()){
-        case 'key':
-            this.sprite = 'images/Key.png';
-        break;
-        case 'star':
-            this.sprite = 'images/Star.png';
-        break;
-        default:
-            this.sprite = 'images/Heart.png';
-    }
+class Treasure{
+    constructor(type = 'heart'){
+        switch(type.toLowerCase()){
+            case 'key':
+                this.sprite = 'images/Key.png';
+            break;
+            case 'star':
+                this.sprite = 'images/Star.png';
+            break;
+            default:
+                this.sprite = 'images/Heart.png';
+        }
 
-    this.column = getRandomInt(0,5);//between 0 & 4
-    this.row = getRandomInt(1,6); //between 1 & 5
-    this.points = 1;
-    this.awarded = false;
-    this.xPosition = function(){
+        this.column = getRandomInt(0,5);//between 0 & 4
+        this.row = getRandomInt(1,6); //between 1 & 5
+        this.points = 1;
+        this.awarded = false;
+    }
+    xPosition(){
         return this.column * 101;
     }
-    this.yPosition = function(){
+    yPosition(){
         return (this.row * 83) - 10;
     }
-};
 
-
-Treasure.prototype.render =  function(){
-    if(this.awarded === false){
-        ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
+    render(){
+        if(this.awarded === false){
+            ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
+        }
     }
-};
+}
+
+
+
 
 /*******************************************
  * Player Class
