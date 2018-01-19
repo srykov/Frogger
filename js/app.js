@@ -42,7 +42,7 @@ Enemy.prototype.update = function(dt) {
     if(this.x >= 500){
         this.x = -5;
     } //player collided with this enemy - reset the game
-    else if(this.checkCollision(this.game.player)) {
+    else if(this.game.checkCollision(this)) {
         this.game.reset();
     } //otherwise just keep the enemy moving along
     else{
@@ -52,16 +52,6 @@ Enemy.prototype.update = function(dt) {
     }
 };
 
-//check whether this enenmy is occupying the same row/column as the player
-Enemy.prototype.checkCollision = function(){
-
-    const columns = this.columns();
-    if(this.row() === this.game.player.row && columns.has(this.game.player.column)) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
 //move the enemy back to its starting position
 Enemy.prototype.resetPosition = function(){
@@ -234,6 +224,17 @@ Game.prototype.reset = function(){
     this.initializeTreasures();
     this.player = new Player(this);
 
+}
+
+//check whether this enenmy is occupying the same row/column as the player
+Game.prototype.checkCollision = function(enemy){
+
+    const columns = enemy.columns();
+    if(enemy.row() === this.player.row && columns.has(this.player.column)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //create new enemies
