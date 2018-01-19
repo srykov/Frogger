@@ -41,10 +41,9 @@ Enemy.prototype.update = function(dt) {
     //this enemy is off the screen, send him back to the start
     if(this.x >= 500){
         this.x = -5;
-    } //player collided with this enemy
+    } //player collided with this enemy - reset the game
     else if(this.checkCollision(this.game.player)) {
-        this.game.player.loseAPoint();
-        this.game.player.resetPosition();
+        this.game.reset();
     } //otherwise just keep the enemy moving along
     else{
         // multiply any movement by the dt parameter which will
@@ -150,7 +149,7 @@ Player.prototype.loseAPoint = function(){
 //check if the player's new position earns any points
 Player.prototype.update = function(dt){
 
-    if(this.points >= 5){
+    if(this.points >= 4){
         const modalDiv = document.getElementById('winner-modal');
         modalDiv.style.display = 'block';
     }
@@ -229,10 +228,12 @@ var Game = function(){
 //reset the various parts of the game
 Game.prototype.reset = function(){
     this.allEnemies = [];
-    this.initializeEnemies();
     this.allTreasures = [];
+
+    this.initializeEnemies();
     this.initializeTreasures();
     this.player = new Player(this);
+
 }
 
 //create new enemies
