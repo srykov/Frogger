@@ -28,6 +28,18 @@ class Entity{
                 this.sprite = 'images/Heart.png';
          }
      }
+    xPosition(){
+        return this.column * 101;
+    }
+    yPosition(){
+        return (this.row * 83) - 10;
+    }
+
+    render(){
+        if(this.awarded === false){
+            ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
+        }
+    }
 }
 
 
@@ -87,18 +99,7 @@ class Treasure extends Entity{
         this.points = 1;
         this.awarded = false;
     }
-    xPosition(){
-        return this.column * 101;
-    }
-    yPosition(){
-        return (this.row * 83) - 10;
-    }
 
-    render(){
-        if(this.awarded === false){
-            ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
-        }
-    }
 } //end Treasure definition
 
 
