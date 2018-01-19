@@ -42,7 +42,6 @@ class Enemy{
 }
 
 
-
 /*******************************************
  * Treasure Class
  * Represents the hidden treasures!
@@ -80,101 +79,99 @@ class Treasure{
 }
 
 
-
-
 /*******************************************
  * Player Class
  * Represents the Hero of Our Game!
  ******************************************/
-var Player = function(game){
-    this.sprite = 'images/char-princess-girl.png';
+class Player{
+    constructor(game){
+        this.sprite = 'images/char-princess-girl.png';
 
-    this.startColumn = getRandomInt(0,5); //between 0 & 4
-    this.startRow = getRandomInt(4,6); //between 4 & 5 (the grass rows)
-    this.column = this.startColumn;
-    this.row = this.startRow;
-    this.xPosition = function(){
+        this.startColumn = getRandomInt(0,5); //between 0 & 4
+        this.startRow = getRandomInt(4,6); //between 4 & 5 (the grass rows)
+        this.column = this.startColumn;
+        this.row = this.startRow;
+        this.points = 0;
+        this.game = game;
+    }
+    xPosition(){
         return this.column * 101;
-    };
-    this.yPosition = function(){
+    }
+    yPosition(){
         return (this.row * 83) - 10;
-    };
-    this.points = 0;
-    this.game = game;
-};
-
-//update the Player's sprite, after the user chooses a character
-Player.prototype.updateSprite = function(characterName){
-    switch(characterName){
-        case 'jimmy':
-            this.sprite =  'images/char-boy.png';
-        break;
-        case 'jane':
-            this.sprite =  'images/char-princess-girl.png';
-        break;
-        case 'sabrina':
-            this.sprite =  'images/char-cat-girl.png';
-        break;
-    }
-};
-
-//check if the player's new position earns any points
-Player.prototype.update = function(dt){
-
-    if(this.points >= 4){
-        const modalDiv = document.getElementById('winner-modal');
-        modalDiv.style.display = 'block';
     }
 
-    for(treasure of this.game.allTreasures){
-        if(this.row === treasure.row && this.column === treasure.column && treasure.awarded === false){
-            this.points = this.points + treasure.points;
-            treasure.awarded = true;
+    //update the Player's sprite, after the user chooses a character
+    updateSprite(characterName){
+        switch(characterName){
+            case 'jimmy':
+                this.sprite =  'images/char-boy.png';
+            break;
+            case 'jane':
+                this.sprite =  'images/char-princess-girl.png';
+            break;
+            case 'sabrina':
+                this.sprite =  'images/char-cat-girl.png';
+            break;
         }
     }
 
-    //if the player reaches the water, give them a point and move them back
-    //to the starting position
-    if(this.row === 0){
-        this.points++;
-        this.resetPosition();
+    //check if the player's new position earns any points
+    update(dt){
+        if(this.points >= 4){
+            const modalDiv = document.getElementById('winner-modal');
+            modalDiv.style.display = 'block';
+        }
+        debugger;
+        for(let treasure of this.game.allTreasures){
+            if(this.row === treasure.row && this.column === treasure.column && treasure.awarded === false){
+                this.points = this.points + treasure.points;
+                treasure.awarded = true;
+            }
+        }
+
+        //if the player reaches the water, give them a point and move them back
+        //to the starting position
+        if(this.row === 0){
+            this.points++;
+            this.resetPosition();
+        }
+
+        const pointsSpan = document.querySelector('.points');
+        pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
     }
 
-    const pointsSpan = document.querySelector('.points');
-    pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
-};
-
-//user the player's  x/y coordinates to render the
-// player in the correct position on the canvas
-Player.prototype.render = function(){
-    ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
-};
-
-//move the player back to the start position
-Player.prototype.resetPosition = function(){
-    this.column = this.startColumn;
-    this.row = this.startRow;
-    this.update();
-    this.render();
-};
-
-//have the player move according to user input
-Player.prototype.handleInput = function(action){
-
-    const topRow = 0;
-    const bottomRow = 5;
-    const firstColumn = 0;
-    const lastColumn = 4;
-    if(action === 'up' && this.row > topRow){
-        this.row--;
-    } else if(action === 'down' && this.row < bottomRow){
-        this.row++;
-    } else if(action ==='left' && this.column > firstColumn){
-        this.column--;
-    } else if(action === 'right' && this.column < lastColumn){
-        this.column++;
+    //user the player's  x/y coordinates to render the
+    //player in the correct position on the canvas
+    render(){
+        ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
     }
-};
+
+    //move the player back to the start position
+    resetPosition(){
+        this.column = this.startColumn;
+        this.row = this.startRow;
+        this.update();
+        this.render();
+    }
+
+    //have the player move according to user input
+    handleInput(action){
+        const topRow = 0;
+        const bottomRow = 5;
+        const firstColumn = 0;
+        const lastColumn = 4;
+        if(action === 'up' && this.row > topRow){
+            this.row--;
+        } else if(action === 'down' && this.row < bottomRow){
+            this.row++;
+        } else if(action ==='left' && this.column > firstColumn){
+            this.column--;
+        } else if(action === 'right' && this.column < lastColumn){
+            this.column++;
+        }
+    }
+}
 
 
 /*******************************************
@@ -202,7 +199,6 @@ Game.prototype.reset = function(){
 //check whether the given enemy is occupying the same row/column as the player
 Game.prototype.checkCollision = function(enemy){
     const widthOfEnemies = 85;
-    debugger;
     if( (enemy.row() === this.player.row) &&
             (enemy.x < this.player.xPosition() + widthOfEnemies) &&
             (enemy.x + widthOfEnemies > this.player.xPosition())){
