@@ -68,6 +68,37 @@ Enemy.prototype.render = function() {
 };
 
 /*******************************************
+ * Treasure Class
+ * Represents the hidden treasures!
+ ******************************************/
+var Treasure = function(type = 'heart'){
+    switch(type.toLowerCase()){
+        case 'key':
+            this.sprite = 'images/Key.png';
+        break;
+        case 'star':
+            this.sprite = 'images/Star.png';
+        break;
+        default:
+            this.sprite = 'images/Heart.png';
+    }
+
+
+    this.column = getRandomInt(0,5);
+    this.row = getRandomInt(1,6);
+    this.points = getRandomInt(1,3);
+    this.awarded = false;
+};
+
+Treasure.prototype.render =  function(){
+    if(this.awarded === false){
+        const xPosition = this.column * 101;
+        const yPosition = (this.row * 83) - 10;
+        ctx.drawImage(Resources.get(this.sprite), xPosition, yPosition);
+    }
+}
+
+/*******************************************
  * Player Class
  * Represents the Hero of Our Game!
  ******************************************/
@@ -104,16 +135,26 @@ Player.prototype.loseAPoint = function(){
 
 }
 
-//update the player's position
+//check if the player's new position earns any points
 Player.prototype.update = function(dt){
+    debugger;
+
+    for(treasure of allTreasures){
+        if(this.row === treasure.row && this.column === treasure.column && treasure.awarded === false){
+            this.points = this.points + treasure.points;
+            treasure.awarded = true;
+        }
+    }
+
     //if the player reaches the water, give them a point and move them back
     //to the starting position
     if(this.row === 0){
         this.points++;
-        const pointsSpan = document.querySelector('.points');
-        pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
         this.resetPosition();
     }
+
+    const pointsSpan = document.querySelector('.points');
+    pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
 }
 
 //translate the player's column/row into x/y coordinates
@@ -156,14 +197,27 @@ const enemy2 = new Enemy(-6,1,50);
 allEnemies.push(enemy2);
 const enemy3 = new Enemy(-1,2,70);
 allEnemies.push(enemy3);
-/*const enemy4 = new Enemy(-6,2,30);
-allEnemies.push(enemy4);*/
-const enemy5 = new Enemy(0,3,60);
-allEnemies.push(enemy5);
+const enemy4 = new Enemy(0,3,60);
+allEnemies.push(enemy4);
+
+
+const allTreasures = [];
+const heart = new Treasure('heart');
+allTreasures.push(heart);
+const star = new Treasure('star');
+allTreasures.push(star);
+const key = new Treasure('key');
+allTreasures.push(key);
 
 // Place the player object in a variable called player
 const player = new Player(2,5);
 
+//returns a random integer between the min and max values
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
 
 const modalDiv = document.querySelector('.modal');

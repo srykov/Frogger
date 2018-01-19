@@ -154,6 +154,10 @@ var Engine = (function(global) {
             enemy.render();
         });
 
+        allTreasures.forEach(function(treausre){
+            treausre.render();
+        });
+
         player.render();
     }
 
@@ -176,7 +180,10 @@ var Engine = (function(global) {
         'images/enemy-bug.png',
         'images/char-boy.png',
         'images/char-princess-girl.png',
-        'images/char-cat-girl.png'
+        'images/char-cat-girl.png',
+        'images/Key.png',
+        'images/Heart.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 
