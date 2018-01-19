@@ -1,6 +1,24 @@
-frontend-nanodegree-arcade-game
-===============================
+# Arcade Game Project
+This was a project that I developed as part of my Udacity [Front-End Web Developer Nanodegree Program](https://www.udacity.com/course/front-end-web-developer-nanodegree--nd001). The project required me to build my own version of the classic arcade game 'Frogger', using Object Oriented Javascript. Udacity provided some initial javascript for rendering the game canvas. I wrote the javascript to bring the game's functionality to life, as well as customizing the HTML and CSS.
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+![Frogger](https://github.com/srykov/fend-arcade-game/blob/master/images/char-cat-girl.png)
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+## What I Learned
+This project gave me an opportunity to practice what I learned in the Exploring JS - Objects, Tools and Testing section of my course.
+
+Specifically I practiced:
+* using Object Oriented Javascript
+
+## Getting Started
+To try The Arcade Game out:
+* Download the source code
+* Open index.html in your browser.
+* Start playing by choosing a character!
+
+## How The Game Works
+The object of the game is to reach the water, without touching any bugs!  You can move your character by pressing the up, down, left and right arrow keys. You get one point for reaching the water and one point for each treasures you collect as you go. You win the game when you have collected 4 points.
+
+
+## Contributing
+
+This repository is the finished code for _my_ Frogger Game project. Therefore, I will  most likely will not accept pull requests.
