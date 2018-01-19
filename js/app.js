@@ -2,43 +2,46 @@
  * Enemy Class: represents the enemies that
  * our player must avoid!
  ******************************************/
-var Enemy = function(startRow = 0, game) {
-    startColumn = getRandomInt(1,3);//between 1 & 3 (stone rows)
-    startRow = startRow;
-    this.x = startColumn * 101;
-    this.y = (startRow * 83) - 10;
-    this.sprite = 'images/enemy-bug.png';
-    this.speed = getRandomInt(4, 7);
-    this.game = game;
-};
-
-//Returns the row that this enemy is currently occupying
-//(should only ever be one row)
-Enemy.prototype.row = function(){
-    return Math.floor((this.y + 10)/83);
-};
-
-// Update the enemy's position
-// Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    //this enemy is off the screen, send him back to the start
-    if(this.x >= 500){
-        this.x = -5;
-    } //player collided with this enemy - reset the game
-    else if(this.game.checkCollision(this)){
-        this.game.reset();
-    } //otherwise just keep the enemy moving along
-    else{
-        // multiply any movement by the dt parameter which will
-        // ensure the game runs at the same speed for all computers
-        this.x = this.x + (this.speed*dt);
+class Enemy{
+    constructor(startRow = 0, game) {
+        this.sprite = 'images/enemy-bug.png';
+        let startColumn = getRandomInt(1,3);//between 1 & 3 (stone rows)
+        this.x = startColumn * 101;
+        this.y = (startRow * 83) - 10;
+        this.speed = getRandomInt(4, 7);
+        this.game = game;
     }
-};
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
+    //Returns the row that this enemy is currently occupying
+    //(should only ever be one row)
+    row(){
+        return Math.floor((this.y + 10)/83);
+    }
+
+    // Update the enemy's position
+    // Parameter: dt, a time delta between ticks
+    update(dt) {
+        //this enemy is off the screen, send him back to the start
+        if(this.x >= 500){
+            this.x = -5;
+        } //player collided with this enemy - reset the game
+        else if(this.game.checkCollision(this)){
+            this.game.reset();
+        } //otherwise just keep the enemy moving along
+        else{
+            // multiply any movement by the dt parameter which will
+            // ensure the game runs at the same speed for all computers
+            this.x = this.x + (this.speed*dt);
+        }
+    }
+
+    // Draw the enemy on the screen, required method for game
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+}
+
+
 
 /*******************************************
  * Treasure Class
