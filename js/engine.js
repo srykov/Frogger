@@ -91,8 +91,8 @@ var Engine = (function(global) {
      */
     function updateEntities(dt) {
 
-        theGame.allEnemies.forEach(function(enemy, player) {
-            enemy.update(dt, player);
+        theGame.allEnemies.forEach(function(enemy) {
+            enemy.update(dt);
         });
         theGame.player.update();
     }
