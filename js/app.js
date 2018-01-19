@@ -2,14 +2,14 @@
  * Enemy Class: represents the enemies that
  * our player must avoid!
  ******************************************/
-var Enemy = function(startColumn = 0, startRow = 0, speed) {
+var Enemy = function(startColumn = 0, startRow = 0, speed, game) {
     this.sprite = 'images/enemy-bug.png';
     this.speed = speed;
     this.startColumn = startColumn;
     this.startRow = startRow;
-
     this.x = startColumn * 101;
     this.y = (startRow * 83) - 10;
+    this.game = game;
 };
 
 //Returns a set containing the columns that this enemy is currently
@@ -42,9 +42,9 @@ Enemy.prototype.update = function(dt) {
     if(this.x >= 500){
         this.x = -5;
     } //player collided with this enemy
-    else if(this.checkCollision(player)) {
-        player.loseAPoint();
-        player.resetPosition();
+    else if(this.checkCollision(this.game.player)) {
+        this.game.player.loseAPoint();
+        this.game.player.resetPosition();
     } //otherwise just keep the enemy moving along
     else{
         // multiply any movement by the dt parameter which will
@@ -57,7 +57,7 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.checkCollision = function(){
 
     const columns = this.columns();
-    if(this.row() === player.row && columns.has(player.column)) {
+    if(this.row() === this.game.player.row && columns.has(this.game.player.column)) {
         return true;
     } else {
         return false;
@@ -99,6 +99,7 @@ var Treasure = function(type = 'heart'){
     this.awarded = false;
 };
 
+
 Treasure.prototype.render =  function(){
     if(this.awarded === false){
         const xPosition = this.column * 101;
@@ -111,12 +112,13 @@ Treasure.prototype.render =  function(){
  * Player Class
  * Represents the Hero of Our Game!
  ******************************************/
-var Player = function(column = 2, row = 5){
+var Player = function(game){
     this.sprite = 'images/char-princess-girl.png';
 
-    this.column = column;
-    this.row = row;
+    this.column = getRandomInt(0,5);//between 0 & 4
+    this.row = getRandomInt(4,6);//between 4 & 5 (the grass rows)
     this.points = 0;
+    this.game = game;
 };
 
 Player.prototype.updateCharacter = function(characterName){
@@ -152,7 +154,7 @@ Player.prototype.update = function(dt){
         modalDiv.style.display = 'block';
     }
 
-    for(treasure of allTreasures){
+    for(treasure of this.game.allTreasures){
         if(this.row === treasure.row && this.column === treasure.column && treasure.awarded === false){
             this.points = this.points + treasure.points;
             treasure.awarded = true;
@@ -212,29 +214,47 @@ Player.prototype.handleInput = function(action){
 }
 
 
-// Place all enemy objects in an array called allEnemies
-const allEnemies = [];
+/*******************************************
+ * Game Class: represents the game
+ ******************************************/
+var Game = function(){
+    this.allEnemies = [];
+    this.allTreasures = [];
+    this.initializeEnemies();
+    this.initializeTreasures();
+    this.player = new Player(this);
+};
 
-const enemy1 = new Enemy(0,1,40);
-allEnemies.push(enemy1);
-const enemy2 = new Enemy(-6,1,50);
-allEnemies.push(enemy2);
-const enemy3 = new Enemy(-1,2,70);
-allEnemies.push(enemy3);
-const enemy4 = new Enemy(0,3,60);
-allEnemies.push(enemy4);
+//reset the various parts of the game
+Game.prototype.reset = function(){
+    this.allEnemies = [];
+    this.initializeEnemies();
+    this.allTreasures = [];
+    this.initializeTreasures();
+    this.player = new Player(this);
+}
 
+//create new enemies
+Game.prototype.initializeEnemies = function(){
+    const enemy1 = new Enemy(0,1,40,this);//row 1
+    this.allEnemies.push(enemy1);
+    const enemy2 = new Enemy(-1,2,70,this); //row 2
+    this.allEnemies.push(enemy2);
+    const enemy3 = new Enemy(0,3,60,this); //row3
+    this.allEnemies.push(enemy3);
+};
 
-const allTreasures = [];
-const heart = new Treasure('heart');
-allTreasures.push(heart);
-const star = new Treasure('star');
-allTreasures.push(star);
-const key = new Treasure('key');
-allTreasures.push(key);
+//create new treasures
+Game.prototype.initializeTreasures = function(){
+    const heart = new Treasure('heart');
+    this.allTreasures.push(heart);
+    const star = new Treasure('star');
+    this.allTreasures.push(star);
+    const key = new Treasure('key');
+    this.allTreasures.push(key);
+};
 
-// Place the player object in a variable called player
-const player = new Player(2,5);
+const theGame = new Game();
 
 //returns a random integer between the min and max values
 function getRandomInt(min, max) {
@@ -243,15 +263,14 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-
+//set up the click events on the init-modal
 const initModalDiv = document.getElementById('init-modal');
 initModalDiv.addEventListener('click', function(e) {
     const clickTarget = e.target;
     if(clickTarget.nodeName === 'IMG'){
         const characterDiv = clickTarget.parentElement;
         const charName = characterDiv.attributes.getNamedItem("data-key").value;
-        console.log(charName);
-        player.updateCharacter(charName);
+        theGame.player.updateCharacter(charName);
         initModalDiv.style.display = 'none';
     }
 
@@ -261,9 +280,10 @@ initModalDiv.addEventListener('click', function(e) {
 
 });
 
+//set up the click events on the winner-modal
 const winnerModalDiv = document.getElementById('winner-modal');
 winnerModalDiv.addEventListener('click', function(e) {
-    player.reset();
+    theGame.reset();
     const clickTarget = e.target;
     if(clickTarget.nodeName === 'SPAN' && clickTarget.classList.contains('close')){
         winnerModalDiv.style.display = 'none';
@@ -289,7 +309,7 @@ document.addEventListener('keyup', function(e) {
 
         const keyValue = allowedKeys.get(e.keyCode);
         e.preventDefault();
-        player.handleInput(keyValue);
+        theGame.player.handleInput(keyValue);
     }
 
 });
