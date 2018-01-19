@@ -154,11 +154,10 @@ const enemy1 = new Enemy(0,1,40);
 allEnemies.push(enemy1);
 const enemy2 = new Enemy(-6,1,50);
 allEnemies.push(enemy2);
-const enemy3 = new Enemy(-1,2,100);
+const enemy3 = new Enemy(-1,2,70);
 allEnemies.push(enemy3);
-const enemy4 = new Enemy(-6,2,30);
-allEnemies.push(enemy4);
-
+/*const enemy4 = new Enemy(-6,2,30);
+allEnemies.push(enemy4);*/
 const enemy5 = new Enemy(0,3,60);
 allEnemies.push(enemy5);
 
