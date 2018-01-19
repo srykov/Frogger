@@ -35,10 +35,16 @@ class Entity{
         return (this.row * 83) - 10;
     }
 
+    //draw the entity on the canvas
     render(){
-        if(this.awarded === false){
-            ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
-        }
+        ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
+    }
+
+    //returns a random integer between the min and max values
+    getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min;
     }
 }
 
@@ -50,10 +56,10 @@ class Entity{
 class Enemy extends Entity{
     constructor(startRow = 0, game) {
         super('bug');
-        let startColumn = getRandomInt(1,3);//between 1 & 3 (stone rows)
+        const startColumn = super.getRandomInt(1,3);//between 1 & 3 (stone rows)
         this.x = startColumn * 101;
         this.y = (startRow * 83) - 10;
-        this.speed = getRandomInt(30, 60);
+        this.speed = super.getRandomInt(30, 60);
         this.game = game;
     }
 
@@ -94,12 +100,17 @@ class Enemy extends Entity{
 class Treasure extends Entity{
     constructor(type){
         super(type);
-        this.column = getRandomInt(0,5);//between 0 & 4
-        this.row = getRandomInt(1,6); //between 1 & 5
+        this.column = super.getRandomInt(0,5);//between 0 & 4
+        this.row = super.getRandomInt(1,6); //between 1 & 5
         this.points = 1;
         this.awarded = false;
     }
 
+    render(){
+        if(this.awarded === false){
+            super.render();
+        }
+    }
 } //end Treasure definition
 
 
@@ -110,18 +121,12 @@ class Treasure extends Entity{
 class Player extends Entity{
     constructor(game){
         super('sabrina');
-        this.startColumn = getRandomInt(0,5); //between 0 & 4
-        this.startRow = getRandomInt(4,6); //between 4 & 5 (the grass rows)
+        this.startColumn = super.getRandomInt(0,5); //between 0 & 4
+        this.startRow = super.getRandomInt(4,6); //between 4 & 5 (the grass rows)
         this.column = this.startColumn;
         this.row = this.startRow;
         this.points = 0;
         this.game = game;
-    }
-    xPosition(){
-        return this.column * 101;
-    }
-    yPosition(){
-        return (this.row * 83) - 10;
     }
 
     //update the Player's sprite, after the user chooses a character
@@ -145,7 +150,6 @@ class Player extends Entity{
             const modalDiv = document.getElementById('winner-modal');
             modalDiv.style.display = 'block';
         }
-        debugger;
         for(let treasure of this.game.allTreasures){
             if(this.row === treasure.row && this.column === treasure.column && treasure.awarded === false){
                 this.points = this.points + treasure.points;
@@ -162,12 +166,6 @@ class Player extends Entity{
 
         const pointsSpan = document.querySelector('.points');
         pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
-    }
-
-    //user the player's  x/y coordinates to render the
-    //player in the correct position on the canvas
-    render(){
-        ctx.drawImage(Resources.get(this.sprite), this.xPosition(), this.yPosition());
     }
 
     //move the player back to the start position
@@ -222,10 +220,13 @@ class Game {
 
     //check whether the given enemy is occupying the same row/column as the player
     checkCollision(enemy){
-        const widthOfEnemies = 85;
+        const widthOfEnemies = 100;
+        const widthOfPlayers = 80;
+
         if( (enemy.row() === this.player.row) &&
-                (enemy.x < this.player.xPosition() + widthOfEnemies) &&
-                (enemy.x + widthOfEnemies > this.player.xPosition())){
+                (enemy.x + widthOfEnemies > this.player.xPosition() + 15) &&
+                (enemy.x < widthOfPlayers - 15 + this.player.xPosition()) ){
+            console.log('Enemy X: ' + enemy.x + ', Player X: ' + this.player.xPosition());
             return true;
         } else {
             return false;
@@ -256,12 +257,7 @@ class Game {
 
 const theGame = new Game();
 
-//returns a random integer between the min and max values
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
-}
+
 
 //set up the click events on the init-modal
 const initModalDiv = document.getElementById('init-modal');
