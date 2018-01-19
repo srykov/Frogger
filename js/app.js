@@ -63,6 +63,13 @@ class Enemy extends Entity{
         this.game = game;
     }
 
+    xPosition(){
+        return this.x;
+    }
+    yPosition(){
+        return this.y;
+    }
+
     //Returns the row that this enemy is currently occupying
     //(should only ever be one row)
     row(){
@@ -84,11 +91,6 @@ class Enemy extends Entity{
             // ensure the game runs at the same speed for all computers
             this.x = this.x + (this.speed*dt);
         }
-    }
-
-    // Draw the enemy on the screen, required method for game
-    render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 } //end Enemy definition
 
