@@ -1,14 +1,47 @@
 /*******************************************
+ * Entity Class: The base class that
+ * represents the objects in the games.
+ ******************************************/
+class Entity{
+    constructor(key){
+        switch(key.toLowerCase()){
+            case 'jimmy':
+                this.sprite =  'images/char-boy.png';
+            break;
+            case 'jane':
+                this.sprite =  'images/char-princess-girl.png';
+            break;
+            case 'sabrina':
+                this.sprite =  'images/char-cat-girl.png';
+            break;
+            case 'bug':
+                this.sprite = 'images/enemy-bug.png';
+            break;
+            case 'key':
+                this.sprite = 'images/Key.png';
+            break;
+            case 'star':
+                this.sprite = 'images/Star.png';
+            break;
+            case 'heart':
+            default:
+                this.sprite = 'images/Heart.png';
+         }
+     }
+}
+
+
+/*******************************************
  * Enemy Class: The enemies that  our player
  * must avoid!
  ******************************************/
-class Enemy{
+class Enemy extends Entity{
     constructor(startRow = 0, game) {
-        this.sprite = 'images/enemy-bug.png';
+        super('bug');
         let startColumn = getRandomInt(1,3);//between 1 & 3 (stone rows)
         this.x = startColumn * 101;
         this.y = (startRow * 83) - 10;
-        this.speed = getRandomInt(4, 7);
+        this.speed = getRandomInt(30, 60);
         this.game = game;
     }
 
@@ -46,19 +79,9 @@ class Enemy{
  * Treasure Class
  * Represents the hidden treasures!
  ******************************************/
-class Treasure{
-    constructor(type = 'heart'){
-        switch(type.toLowerCase()){
-            case 'key':
-                this.sprite = 'images/Key.png';
-            break;
-            case 'star':
-                this.sprite = 'images/Star.png';
-            break;
-            default:
-                this.sprite = 'images/Heart.png';
-        }
-
+class Treasure extends Entity{
+    constructor(type){
+        super(type);
         this.column = getRandomInt(0,5);//between 0 & 4
         this.row = getRandomInt(1,6); //between 1 & 5
         this.points = 1;
@@ -83,10 +106,9 @@ class Treasure{
  * Player Class
  * Represents the Hero of Our Game!
  ******************************************/
-class Player{
+class Player extends Entity{
     constructor(game){
-        this.sprite = 'images/char-princess-girl.png';
-
+        super('sabrina');
         this.startColumn = getRandomInt(0,5); //between 0 & 4
         this.startRow = getRandomInt(4,6); //between 4 & 5 (the grass rows)
         this.column = this.startColumn;
