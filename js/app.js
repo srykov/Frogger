@@ -5,6 +5,8 @@
 var Enemy = function(startColumn = 0, startRow = 0, speed) {
     this.sprite = 'images/enemy-bug.png';
     this.speed = speed;
+    this.startColumn = startColumn;
+    this.startRow = startRow;
 
     this.x = startColumn * 101;
     this.y = (startRow * 83) - 10;
@@ -25,13 +27,13 @@ Enemy.prototype.columns = function(){
     columns.add(Math.floor((this.x + widthOfEnemy)/widthOfColumn));
 
     return columns;
-}
+};
 
 //Returns the row that this enemy is currently occupying
 //(should only ever be one row)
 Enemy.prototype.row = function(){
     return Math.floor((this.y + 10)/83);
-}
+};
 
 // Update the enemy's position
 // Parameter: dt, a time delta between ticks
@@ -61,6 +63,13 @@ Enemy.prototype.checkCollision = function(){
         return false;
     }
 }
+
+//move the enemy back to its starting position
+Enemy.prototype.resetPosition = function(){
+    this.column = this.startColumn;
+    this.row = this.startRow;
+    this.render();
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -137,8 +146,6 @@ Player.prototype.loseAPoint = function(){
 
 //check if the player's new position earns any points
 Player.prototype.update = function(dt){
-    debugger;
-
     for(treasure of allTreasures){
         if(this.row === treasure.row && this.column === treasure.column && treasure.awarded === false){
             this.points = this.points + treasure.points;
@@ -229,6 +236,10 @@ modalDiv.addEventListener('click', function(e) {
         const charName = characterDiv.attributes.getNamedItem("data-key").value;
         console.log(charName);
         player.updateCharacter(charName);
+        modal.style.display = 'none';
+    }
+
+    if(clickTarget.nodeName === 'SPAN' && clickTarget.classList.contains('close')){
         modal.style.display = 'none';
     }
 
