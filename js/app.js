@@ -92,7 +92,6 @@ var Treasure = function(type = 'heart'){
             this.sprite = 'images/Heart.png';
     }
 
-
     this.column = getRandomInt(0,5);//between 0 & 4
     this.row = getRandomInt(1,6); //between 1 & 5
     this.points = 1;
@@ -285,10 +284,12 @@ initModalDiv.addEventListener('click', function(e) {
 //set up the click events on the winner-modal
 const winnerModalDiv = document.getElementById('winner-modal');
 winnerModalDiv.addEventListener('click', function(e) {
-    theGame.reset();
+
     const clickTarget = e.target;
-    if(clickTarget.nodeName === 'SPAN' && clickTarget.classList.contains('close')){
+    if((clickTarget.nodeName === 'SPAN' && clickTarget.classList.contains('close')) ||
+        clickTarget.classList.contains('restart') ){
         winnerModalDiv.style.display = 'none';
+        theGame.reset();
     }
 
 });

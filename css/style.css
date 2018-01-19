@@ -121,6 +121,17 @@ h2 {
     display: flex;
 }
 
+.modal .restart {
+    color: #ff6a00;
+}
+
+.modal .restart:hover,
+.modal .restart:focus {
+    color: #1bcc5f;
+    text-decoration: none;
+    cursor: pointer;
+}
+
 /* The Close Button */
 .close {
     color: #a9a9a9;
