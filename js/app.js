@@ -115,8 +115,10 @@ Treasure.prototype.render =  function(){
 var Player = function(game){
     this.sprite = 'images/char-princess-girl.png';
 
-    this.column = getRandomInt(0,5);//between 0 & 4
-    this.row = getRandomInt(4,6);//between 4 & 5 (the grass rows)
+    this.startColumn = getRandomInt(0,5); //between 0 & 4
+    this.startRow = getRandomInt(4,6); //between 4 & 5 (the grass rows)
+    this.column = this.startColumn;
+    this.row = this.startRow;
     this.points = 0;
     this.game = game;
 };
@@ -194,8 +196,8 @@ Player.prototype.reset = function(){
 
 //move the player back to the start position
 Player.prototype.resetPosition = function(){
-    this.column = 2;
-    this.row = 5;
+    this.column = this.startColumn;
+    this.row = this.startRow;
     this.update();
     this.render();
 }

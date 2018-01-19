@@ -154,8 +154,8 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        theGame.allTreasures.forEach(function(treausre){
-            treausre.render();
+        theGame.allTreasures.forEach(function(treasure){
+            treasure.render();
         });
 
         theGame.player.render();
