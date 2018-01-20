@@ -10,7 +10,10 @@ Specifically I practiced:
 * using Object Oriented Javascript
 
 ## Getting Started
-To try The Arcade Game out:
+You can try the Arcade Game out here:
+https://srykov.github.io/fend-arcade-game/
+
+Alternatively you can try the game out by:
 * Download the source code
 * Open index.html in your browser.
 * Start playing by choosing a character!
