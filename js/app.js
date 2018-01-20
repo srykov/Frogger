@@ -140,17 +140,23 @@ class Player extends Entity{
         }
     }
 
-    //check if the player's new position earns any points
-    update(dt){
-        if(this.points >= 4){
-            const modalDiv = document.getElementById('winner-modal');
-            modalDiv.style.display = 'block';
-        }
-        for(let treasure of this.game.allTreasures){
-            if(this.row === treasure.row && this.column === treasure.column && treasure.awarded === false){
-                this.points = this.points + treasure.points;
-                treasure.awarded = true;
-            }
+    //move the player back to the start position
+    resetPosition(){
+        this.column = this.startColumn;
+        this.row = this.startRow;
+        this.render();
+    }
+
+    //have the player move according to user input
+    handleInput(action){
+        if(action === 'up' && this.row > 0){ //not the top row
+            this.row--;
+        } else if(action === 'down' && this.row < 5){ //not the bottom row
+            this.row++;
+        } else if(action ==='left' && this.column > 0){//not the first column
+            this.column--;
+        } else if(action === 'right' && this.column < 4){ //not the last column
+            this.column++;
         }
 
         //if the player reaches the water, give them a point and move them back
@@ -160,32 +166,23 @@ class Player extends Entity{
             this.resetPosition();
         }
 
+        //check if the player got any treasure, award points for treasure found
+        for(let treasure of this.game.allTreasures){
+            if(this.row === treasure.row && this.column === treasure.column && treasure.awarded === false){
+                this.points = this.points + treasure.points;
+                treasure.awarded = true;
+            }
+        }
+        this.render();
+
+        //update points in score panel
         const pointsSpan = document.querySelector('.points');
         pointsSpan.textContent = this.points > 1? this.points + " points" : this.points + " point";
-    }
 
-    //move the player back to the start position
-    resetPosition(){
-        this.column = this.startColumn;
-        this.row = this.startRow;
-        this.update();
-        this.render();
-    }
-
-    //have the player move according to user input
-    handleInput(action){
-        const topRow = 0;
-        const bottomRow = 5;
-        const firstColumn = 0;
-        const lastColumn = 4;
-        if(action === 'up' && this.row > topRow){
-            this.row--;
-        } else if(action === 'down' && this.row < bottomRow){
-            this.row++;
-        } else if(action ==='left' && this.column > firstColumn){
-            this.column--;
-        } else if(action === 'right' && this.column < lastColumn){
-            this.column++;
+        //check if the user has won the game
+        if(this.points >= 4){
+            const modalDiv = document.getElementById('winner-modal');
+            modalDiv.style.display = 'block';
         }
     }
 } //end Player Definition
