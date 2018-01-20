@@ -1,33 +1,13 @@
+'use strict'
+
 /*******************************************
  * Entity Class: The base class that
  * represents the objects in the games.
  ******************************************/
 class Entity{
-    constructor(key){
-        switch(key.toLowerCase()){
-            case 'jimmy':
-                this.sprite =  'images/char-boy.png';
-            break;
-            case 'jane':
-                this.sprite =  'images/char-princess-girl.png';
-            break;
-            case 'sabrina':
-                this.sprite =  'images/char-cat-girl.png';
-            break;
-            case 'bug':
-                this.sprite = 'images/enemy-bug.png';
-            break;
-            case 'key':
-                this.sprite = 'images/Key.png';
-            break;
-            case 'star':
-                this.sprite = 'images/Star.png';
-            break;
-            case 'heart':
-            default:
-                this.sprite = 'images/Heart.png';
-         }
-     }
+    constructor(imageUrl){
+        this.sprite = imageUrl;
+    }
     xPosition(){
         return this.column * 101;
     }
@@ -55,7 +35,7 @@ class Entity{
  ******************************************/
 class Enemy extends Entity{
     constructor(startRow = 0, game) {
-        super('bug');
+        super('images/enemy-bug.png');
         const startColumn = super.getRandomInt(1,3);//between 1 & 3 (stone rows)
         this.x = startColumn * 101;
         this.y = (startRow * 83) - 10;
@@ -83,13 +63,27 @@ class Enemy extends Entity{
         if(this.x >= 500){
             this.x = -5;
         } //player collided with this enemy - reset the game
-        else if(this.game.checkCollision(this)){
+        else if(this.checkCollision(this)){
             this.game.reset();
         } //otherwise just keep the enemy moving along
         else{
             // multiply any movement by the dt parameter which will
             // ensure the game runs at the same speed for all computers
             this.x = this.x + (this.speed*dt);
+        }
+    }
+
+    //check whether the given enemy is occupying the same row/column as the player
+    checkCollision(enemy){
+        const widthOfEnemies = 100;
+        const widthOfPlayers = 80;
+
+        if( (this.row() === this.game.player.row) &&
+                (this.x + widthOfEnemies > this.game.player.xPosition() + 15) &&
+                (this.x < widthOfPlayers - 15 + this.game.player.xPosition()) ){
+            return true;
+        } else {
+            return false;
         }
     }
 } //end Enemy definition
@@ -122,7 +116,7 @@ class Treasure extends Entity{
  ******************************************/
 class Player extends Entity{
     constructor(game){
-        super('sabrina');
+        super('images/char-cat-girl.png');
         this.startColumn = super.getRandomInt(0,5); //between 0 & 4
         this.startRow = super.getRandomInt(4,6); //between 4 & 5 (the grass rows)
         this.column = this.startColumn;
@@ -220,20 +214,6 @@ class Game {
 
     }
 
-    //check whether the given enemy is occupying the same row/column as the player
-    checkCollision(enemy){
-        const widthOfEnemies = 100;
-        const widthOfPlayers = 80;
-
-        if( (enemy.row() === this.player.row) &&
-                (enemy.x + widthOfEnemies > this.player.xPosition() + 15) &&
-                (enemy.x < widthOfPlayers - 15 + this.player.xPosition()) ){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     //create new enemies
     initializeEnemies(){
         const enemy1 = new Enemy(1,this);//row 1
@@ -246,11 +226,11 @@ class Game {
 
     //create new treasures
     initializeTreasures(){
-        const heart = new Treasure('heart');
+        const heart = new Treasure('images/Heart.png');
         this.allTreasures.push(heart);
-        const star = new Treasure('star');
+        const star = new Treasure('images/Star.png');
         this.allTreasures.push(star);
-        const key = new Treasure('key');
+        const key = new Treasure('images/Key.png');
         this.allTreasures.push(key);
     }
 } //end Game definition
