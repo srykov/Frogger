@@ -13,7 +13,7 @@ Specifically I practiced:
 You can try the Arcade Game out here:
 https://srykov.github.io/fend-arcade-game/
 
-Alternatively you can try the game out by:
+Alternatively you can try the game out by doing the following:
 * Download the source code
 * Open index.html in your browser.
 * Start playing by choosing a character!
